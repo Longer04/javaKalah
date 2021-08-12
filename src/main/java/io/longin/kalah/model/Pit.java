@@ -1,9 +1,7 @@
 package io.longin.kalah.model;
 
 
-import static io.longin.kalah.constants.GameConstants.INITIAL_AMOUNT_OF_STONES;
-import static io.longin.kalah.model.Board.PLAYER_ONE_BASE;
-import static io.longin.kalah.model.Board.PLAYER_TWO_BASE;
+import static io.longin.kalah.constants.GameConstants.*;
 
 public class Pit {
 

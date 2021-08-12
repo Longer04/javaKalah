@@ -23,8 +23,8 @@ public class KalahGameWebService {
     @PostMapping("/games")
     public ResponseEntity<GameDTO> newGame(){
         final Game game = this.kalahGameService.createGame();
-        final ServletUriComponentsBuilder url = ServletUriComponentsBuilder.fromCurrentRequest();
-        return ResponseEntity.status(HttpStatus.CREATED).body(new GameDTO(game.getId(), buildUrl(game.getId(), url)));
+        final ServletUriComponentsBuilder requestUri = ServletUriComponentsBuilder.fromCurrentRequest();
+        return ResponseEntity.status(HttpStatus.CREATED).body(new GameDTO(game.getId(), buildUrl(game.getId(), requestUri)));
     }
 
     private String buildUrl(final String gameId, final ServletUriComponentsBuilder uriComponentsBuilder){

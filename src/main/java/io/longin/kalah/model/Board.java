@@ -1,11 +1,10 @@
 package io.longin.kalah.model;
 
 
-public class Board {
+import static io.longin.kalah.constants.GameConstants.BOARD_SIZE;
+import static io.longin.kalah.constants.GameConstants.PLAYER_ONE_BASE;
 
-    public final static int PLAYER_ONE_BASE = 0;
-    public final static int PLAYER_TWO_BASE = 7;
-    public final static int BOARD_SIZE = 14;
+public class Board {
 
     private Pit[] pits;
 
@@ -14,7 +13,7 @@ public class Board {
     }
 
     private void initializePitsToBoard(){
-        this.pits = new Pit[BOARD_SIZE];
+        this.pits = new Pit[BOARD_SIZE + 1];
         for(int i = PLAYER_ONE_BASE; i <= BOARD_SIZE - 1; i++){
             this.pits[i] = new Pit(i);
         }

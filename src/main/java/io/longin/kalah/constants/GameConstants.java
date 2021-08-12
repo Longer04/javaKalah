@@ -4,9 +4,9 @@ public final class GameConstants {
 
     public static final int BOARD_SIZE = 14;
 
-    public final static int PLAYER_ONE_BASE = 0;
+    public final static int PLAYER_ONE_BASE = 1;
 
-    public final static int PLAYER_TWO_BASE = 7;
+    public final static int PLAYER_TWO_BASE = 8;
 
     public final static int INITIAL_AMOUNT_OF_STONES = 6;
 

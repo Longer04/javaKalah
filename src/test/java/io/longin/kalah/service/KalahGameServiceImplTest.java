@@ -22,9 +22,17 @@ class KalahGameServiceImplTest {
     public void createGameTest(){
         Game game = kalahGameService.createGame();
         assertThat(game.getStatus()).isEqualTo(GameStatus.STARTED);
-        assertThat(game.getBoard().getPit(0).getStones()).isEqualTo(0);
+        assertThat(game.getBoard().getPit(1).getStones()).isEqualTo(0);
         assertNull(game.getMove());
         assertNull(game.getWinner());
+    }
+
+    @Test
+    public void shouldFetchGameWhenPlayTest(){
+        Game game = kalahGameService.createGame();
+        String id = game.getId();
+        Game game1 = kalahGameService.playGame(id, 1);
+        assertThat(game1.getId()).isEqualTo(game.getId());
     }
 
 }
