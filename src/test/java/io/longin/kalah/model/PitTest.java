@@ -16,7 +16,7 @@ class PitTest {
 
     @Test
     public void testCreateNotHousePit(){
-        Pit pit = new Pit(4);
+        Pit pit = new Pit(PLAYER_ONE_BASE + 1);
         assertThat(pit.getStones()).isEqualTo(6);
     }
 
