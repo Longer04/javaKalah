@@ -4,7 +4,6 @@ import io.longin.kalah.dto.GameDTO;
 import io.longin.kalah.model.Game;
 import io.longin.kalah.service.KalahGameService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,12 +15,9 @@ public class KalahGameWebService {
 
     private KalahGameService kalahGameService;
 
-    private Environment environment;
-
     @Autowired
-    public KalahGameWebService(final KalahGameService kalahGameService, final Environment environment){
+    public KalahGameWebService(final KalahGameService kalahGameService){
         this.kalahGameService = kalahGameService;
-        this.environment = environment;
     }
 
     @PostMapping("/games")
