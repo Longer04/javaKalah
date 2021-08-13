@@ -61,6 +61,9 @@ public class KalahGameServiceImpl implements KalahGameService{
 
 
     private void isValidMove(final Game game, final int pitId){
+        if(pitId < 1 || pitId > BOARD_SIZE){
+            throw new IllegalArgumentException("Select valid pit from 1 to 14;");
+        }
         if(isBase(pitId)){
             throw new IllegalArgumentException("Can't move from house pit.");
         }
@@ -120,7 +123,6 @@ public class KalahGameServiceImpl implements KalahGameService{
     }
 
     private void setNextMove(Game game, int pitId) {
-        final Player move;
         final Pit pit = game.getBoard().getPit(pitId);
         if(pit.getId() == PLAYER_ONE_BASE && game.getMove().getBasePitIndex() == PLAYER_ONE_BASE){
             game.setMove(Player.PLAYER_ONE);
