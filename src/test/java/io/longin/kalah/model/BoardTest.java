@@ -13,4 +13,11 @@ class BoardTest {
         assertThat(board.getPits().length).isEqualTo(BOARD_SIZE);
     }
 
+    @Test
+    public void getStonesFromPits(){
+        Board board = new Board();
+        final int stones = board.getStonesFromNonHousePits(Player.PLAYER_ONE);
+        assertThat(stones).isEqualTo(36);
+    }
+
 }

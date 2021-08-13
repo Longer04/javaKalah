@@ -1,7 +1,7 @@
 package io.longin.kalah.model;
 
 
-import static io.longin.kalah.constants.GameConstants.BOARD_SIZE;
+import static io.longin.kalah.constants.GameConstants.*;
 
 public class Board {
 
@@ -24,5 +24,19 @@ public class Board {
 
     public Pit getPit(int index){
         return pits[(index - 1) % BOARD_SIZE];
+    }
+
+    public int getStonesFromNonHousePits(final Player player){
+        int stones = 0;
+        if(player.equals(Player.PLAYER_ONE)){
+            for(int i = 1; i < PLAYER_ONE_BASE; i++){
+                stones += this.pits[i - 1].getStones();
+            }
+        }else{
+            for(int i = PLAYER_ONE_BASE + 1; i < PLAYER_TWO_BASE; i++){
+                stones += this.pits[i - 1].getStones();
+            }
+        }
+        return stones;
     }
 }

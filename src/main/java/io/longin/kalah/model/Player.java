@@ -1,19 +1,18 @@
 package io.longin.kalah.model;
 
-public class Player {
+public enum Player {
 
-    private int basePitIndex;
+    PLAYER_ONE(7),
+    PLAYER_TWO(14);
 
-    public Player(int basePitIndex) {
+    private final int basePitIndex;
+
+    Player(final int basePitIndex) {
         this.basePitIndex = basePitIndex;
     }
 
     public int getBasePitIndex() {
         return basePitIndex;
-    }
-
-    public void setBasePitIndex(int basePitIndex) {
-        this.basePitIndex = basePitIndex;
     }
 
 }

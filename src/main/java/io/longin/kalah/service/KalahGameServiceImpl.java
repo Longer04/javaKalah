@@ -1,9 +1,6 @@
 package io.longin.kalah.service;
 
-import io.longin.kalah.model.Game;
-import io.longin.kalah.model.GameStatus;
-import io.longin.kalah.model.Pit;
-import io.longin.kalah.model.Player;
+import io.longin.kalah.model.*;
 import io.longin.kalah.repository.KalahGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,19 +26,39 @@ public class KalahGameServiceImpl implements KalahGameService{
     public Game playGame(final String gameId, final int pitId) {
         final Game game = repository.getGame(gameId);
         if(game.getStatus().equals(GameStatus.FINISHED)){
-
+            throw new IllegalArgumentException("Game is already finished.");
         }
-        // check game status
-        // validate move
         isValidMove(game, pitId);
         moveStones(game, pitId);
-        // move stones
-        // check game over
-        // set winner
-        // set game status
-
+        if(isGameFinished(game)){
+            sumWinnerStones(game);
+            setWinner(game);
+            game.setStatus(GameStatus.FINISHED);
+        }
         return repository.getGame(gameId);
     }
+
+    private boolean isGameFinished(final Game game) {
+        final int playerOneStones = game.getBoard().getStonesFromNonHousePits(Player.PLAYER_ONE);
+        final int playerTwoStones = game.getBoard().getStonesFromNonHousePits(Player.PLAYER_TWO);
+        return playerOneStones == 0 || playerTwoStones == 0;
+    }
+
+    private void sumWinnerStones(final Game game){
+        final int playerOneStones = game.getBoard().getStonesFromNonHousePits(Player.PLAYER_ONE);
+        final int playerTwoStones = game.getBoard().getStonesFromNonHousePits(Player.PLAYER_TWO);
+        game.getBoard().getPit(PLAYER_ONE_BASE).setStones(playerOneStones + game.getBoard().getPit(PLAYER_ONE_BASE).getStones());
+        game.getBoard().getPit(PLAYER_TWO_BASE).setStones(playerTwoStones + game.getBoard().getPit(PLAYER_TWO_BASE).getStones());
+    }
+
+    private void setWinner(final Game game){
+        if ( game.getBoard().getPit(PLAYER_ONE_BASE).getStones() > game.getBoard().getPit(PLAYER_TWO_BASE).getStones()) {
+            game.setWinner(Player.PLAYER_ONE);
+        } else if (game.getBoard().getPit(PLAYER_ONE_BASE).getStones() < game.getBoard().getPit(PLAYER_TWO_BASE).getStones()) {
+            game.setWinner(Player.PLAYER_TWO);
+        }
+    }
+
 
     private void isValidMove(final Game game, final int pitId){
         if(isBase(pitId)){
@@ -63,9 +80,9 @@ public class KalahGameServiceImpl implements KalahGameService{
 
     private Player definePlayerMove(final int pitId){
         if(pitId < PLAYER_ONE_BASE){
-            return new Player(PLAYER_ONE_BASE);
+            return Player.PLAYER_ONE;
         }else{
-            return new Player(PLAYER_TWO_BASE);
+            return Player.PLAYER_TWO;
         }
     }
 
@@ -106,22 +123,14 @@ public class KalahGameServiceImpl implements KalahGameService{
         final Player move;
         final Pit pit = game.getBoard().getPit(pitId);
         if(pit.getId() == PLAYER_ONE_BASE && game.getMove().getBasePitIndex() == PLAYER_ONE_BASE){
-            move = game.getMove();
-            move.setBasePitIndex(PLAYER_ONE_BASE);
-            game.setMove(move);
+            game.setMove(Player.PLAYER_ONE);
         }else if (pit.getId() == PLAYER_TWO_BASE && game.getMove().getBasePitIndex() == PLAYER_TWO_BASE){
-            move = game.getMove();
-            move.setBasePitIndex(PLAYER_TWO_BASE);
-            game.setMove(move);
+            game.setMove(Player.PLAYER_TWO);
         }else{
             if(game.getMove().getBasePitIndex() == PLAYER_TWO_BASE){
-                move = game.getMove();
-                move.setBasePitIndex(PLAYER_ONE_BASE);
-                game.setMove(move);
+                game.setMove(Player.PLAYER_ONE);
             }else{
-                move = game.getMove();
-                move.setBasePitIndex(PLAYER_TWO_BASE);
-                game.setMove(move);
+                game.setMove(Player.PLAYER_TWO);
             }
         }
     }
@@ -129,10 +138,8 @@ public class KalahGameServiceImpl implements KalahGameService{
     private boolean isValidPit(final Player player, final int pitId){
         if((player.getBasePitIndex() == PLAYER_ONE_BASE) && pitId == PLAYER_TWO_BASE){
             return false;
-        }else if((player.getBasePitIndex() == PLAYER_TWO_BASE) && pitId == PLAYER_ONE_BASE){
-            return false;
-        }
-        return true;
+        }else
+            return (player.getBasePitIndex() != PLAYER_TWO_BASE) || pitId != PLAYER_ONE_BASE;
     }
 
     private boolean isBase(final int pitId){
