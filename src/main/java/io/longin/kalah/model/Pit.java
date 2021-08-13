@@ -13,10 +13,10 @@ public class Pit {
         fillPit(id);
     }
 
-    private void fillPit(final int id){
-        if(id != PLAYER_ONE_BASE && id != PLAYER_TWO_BASE){
+    private void fillPit(final int id) {
+        if (id != PLAYER_ONE_BASE && id != PLAYER_TWO_BASE) {
             this.stones = INITIAL_AMOUNT_OF_STONES;
-        }else{
+        } else {
             this.stones = 0;
         }
     }

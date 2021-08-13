@@ -11,9 +11,9 @@ public class Board {
         initializePitsToBoard();
     }
 
-    private void initializePitsToBoard(){
+    private void initializePitsToBoard() {
         this.pits = new Pit[BOARD_SIZE];
-        for(int i = 0; i < BOARD_SIZE; i++){
+        for (int i = 0; i < BOARD_SIZE; i++) {
             this.pits[i] = new Pit(i + 1);
         }
     }
@@ -22,18 +22,18 @@ public class Board {
         return pits;
     }
 
-    public Pit getPit(int index){
+    public Pit getPit(int index) {
         return pits[(index - 1) % BOARD_SIZE];
     }
 
-    public int getStonesFromNonHousePits(final Player player){
+    public int getStonesFromNonHousePits(final Player player) {
         int stones = 0;
-        if(player.equals(Player.PLAYER_ONE)){
-            for(int i = 1; i < PLAYER_ONE_BASE; i++){
+        if (player.equals(Player.PLAYER_ONE)) {
+            for (int i = 1; i < PLAYER_ONE_BASE; i++) {
                 stones += this.pits[i - 1].getStones();
             }
-        }else{
-            for(int i = PLAYER_ONE_BASE + 1; i < PLAYER_TWO_BASE; i++){
+        } else {
+            for (int i = PLAYER_ONE_BASE + 1; i < PLAYER_TWO_BASE; i++) {
                 stones += this.pits[i - 1].getStones();
             }
         }

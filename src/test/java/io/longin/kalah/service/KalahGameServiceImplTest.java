@@ -56,6 +56,7 @@ class KalahGameServiceImplTest {
                 .isThrownBy(() -> kalahGameService.playGame(game.getId(), 2))
                 .withMessage("Can't move from empty pit.");
     }
+
     @Test
     public void shouldThrowIllegalArgumentExceptionForStartFromPlayerOnePitWhenItsPlayerTwoTurnTest() {
         Game game = kalahGameService.createGame();
@@ -209,9 +210,9 @@ class KalahGameServiceImplTest {
     }
 
 
-    private Game prepareGameWithEmptyPits(){
+    private Game prepareGameWithEmptyPits() {
         final Game game = kalahGameService.createGame();
-        for (Pit p: game.getBoard().getPits()) {
+        for (Pit p : game.getBoard().getPits()) {
             p.setStones(0);
         }
         return game;

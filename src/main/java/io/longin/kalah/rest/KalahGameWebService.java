@@ -23,31 +23,31 @@ public class KalahGameWebService {
     private Environment environment;
 
     @Autowired
-    public KalahGameWebService(final KalahGameService kalahGameService, final Environment environment){
+    public KalahGameWebService(final KalahGameService kalahGameService, final Environment environment) {
         this.kalahGameService = kalahGameService;
         this.environment = environment;
     }
 
     @PostMapping("/games")
-    public ResponseEntity<GameDTO> newGame(){
+    public ResponseEntity<GameDTO> newGame() {
         final Game game = this.kalahGameService.createGame();
         return ResponseEntity.status(HttpStatus.CREATED).body(new GameDTO(game.getId(), buildUrl(game.getId())));
     }
 
     @PutMapping("/games/{gameId}/pits/{pitId}")
-    public ResponseEntity<GameDTO> playGame(@PathVariable final String gameId, @PathVariable final int pitId){
+    public ResponseEntity<GameDTO> playGame(@PathVariable final String gameId, @PathVariable final int pitId) {
         final Game game = this.kalahGameService.playGame(gameId, pitId);
         final Map<Integer, String> gameStatus = createResponseStatus(game);
         return ResponseEntity.status(HttpStatus.OK).body(new GameDTO(game.getId(), buildUrl(game.getId()), gameStatus));
     }
 
-    private String buildUrl(final String gameId){
+    private String buildUrl(final String gameId) {
         final String port = environment.getProperty("server.port");
         final String host = InetAddress.getLoopbackAddress().getHostName();
         return String.format("http://%s:%s/games/%s", host, port, gameId);
     }
 
-    private Map<Integer, String> createResponseStatus(Game game){
+    private Map<Integer, String> createResponseStatus(Game game) {
         return Arrays.stream(game.getBoard().getPits()).collect(Collectors.toMap(Pit::getId, value -> Integer.toString(value.getStones())));
     }
 }

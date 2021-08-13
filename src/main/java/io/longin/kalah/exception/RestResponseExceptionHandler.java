@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 @ControllerAdvice
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = { IllegalArgumentException.class})
+    @ExceptionHandler(value = {IllegalArgumentException.class})
     protected ResponseEntity<Object> handleConflict(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "{\"status\":" + "500," + "\"error\":" + "\"" + ex.toString() + "\"}";

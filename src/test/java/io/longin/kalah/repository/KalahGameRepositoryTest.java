@@ -18,13 +18,13 @@ class KalahGameRepositoryTest {
     KalahGameRepository kalahGameRepository;
 
     @Test
-    public void gameIsSavedTest(){
+    public void gameIsSavedTest() {
         final Game game = kalahGameRepository.save(new Game());
         assertNotNull(game);
     }
 
     @Test
-    public void gameIsPlayedTest(){
+    public void gameIsPlayedTest() {
         final Game game = kalahGameRepository.save(new Game());
         final Game playedGame = kalahGameRepository.getGame(game.getId());
         assertNotNull(playedGame);

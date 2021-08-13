@@ -12,6 +12,7 @@ public final class GameConstants {
 
     public static int ZERO = 0;
 
-    private GameConstants() {}
+    private GameConstants() {
+    }
 
 }
