@@ -10,7 +10,7 @@ class BoardTest {
     @Test
     public void testBoardCreatedSuccessfully(){
         Board board = new Board();
-        assertThat(board.getPits().length).isEqualTo(BOARD_SIZE + 1);
+        assertThat(board.getPits().length).isEqualTo(BOARD_SIZE);
     }
 
 }

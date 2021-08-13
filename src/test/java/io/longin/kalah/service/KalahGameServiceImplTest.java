@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static io.longin.kalah.constants.GameConstants.PLAYER_ONE_BASE;
-import static io.longin.kalah.constants.GameConstants.PLAYER_TWO_BASE;
+import static io.longin.kalah.constants.GameConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -26,7 +25,7 @@ class KalahGameServiceImplTest {
     public void createGameTest() {
         Game game = kalahGameService.createGame();
         assertThat(game.getStatus()).isEqualTo(GameStatus.STARTED);
-        assertThat(game.getBoard().getPit(1).getStones()).isEqualTo(0);
+        assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(ZERO);
         assertNull(game.getMove());
         assertNull(game.getWinner());
     }
@@ -45,7 +44,7 @@ class KalahGameServiceImplTest {
         Game game = kalahGameService.createGame();
         String id = game.getId();
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() -> kalahGameService.playGame(id, 1))
+                .isThrownBy(() -> kalahGameService.playGame(id, PLAYER_ONE_BASE))
                 .withMessage("Can't move from house pit.");
     }
 
@@ -63,7 +62,7 @@ class KalahGameServiceImplTest {
         game.setMove(new Player(PLAYER_TWO_BASE));
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> kalahGameService.playGame(game.getId(), 2))
-                .withMessage("Opposite player turn.");
+                .withMessage("Opposite player turn. Player Two Turn.");
     }
 
     @Test
@@ -72,7 +71,50 @@ class KalahGameServiceImplTest {
         game.setMove(new Player(PLAYER_ONE_BASE));
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> kalahGameService.playGame(game.getId(), 10))
-                .withMessage("Opposite player turn.");
+                .withMessage("Opposite player turn. Player One Turn.");
     }
+
+    @Test
+    public void shouldMoveStonesToPlayerOneBase() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_ONE_BASE));
+        game.getBoard().getPit(4).setStones(2);
+        game.getBoard().getPit(6).setStones(0);
+        int stonesInOppositePit = game.getBoard().getPit(BOARD_SIZE - 6).getStones();
+
+        kalahGameService.playGame(game.getId(), 4);
+
+        assertThat(stonesInOppositePit + 1).isEqualTo(game.getBoard().getPit(PLAYER_ONE_BASE).getStones());
+    }
+
+    @Test
+    public void shouldMoveStonesToNextPitsForPlayerOne() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_ONE_BASE));
+        int startingPit = 4;
+        int expectedStones = 7;
+        int expectedBaseStones = 1;
+        kalahGameService.playGame(game.getId(), 4);
+
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(startingPit + 6).getStones()).isEqualTo(expectedStones);
+    }
+
+    @Test
+    public void shouldMoveStonesToNextPitsForPlayerTwo() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_TWO_BASE));
+        int startingPit = 10;
+        int expectedStones = 7;
+        int expectedBaseStones = 1;
+        kalahGameService.playGame(game.getId(), 10);
+
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getBoard().getPit(PLAYER_TWO_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(startingPit + 6).getStones()).isEqualTo(expectedStones);
+    }
+
+
 
 }

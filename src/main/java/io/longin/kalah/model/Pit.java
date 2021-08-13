@@ -5,7 +5,7 @@ import static io.longin.kalah.constants.GameConstants.*;
 
 public class Pit {
 
-    private long id;
+    private int id;
     private int stones;
 
     public Pit(int id) {
@@ -21,11 +21,11 @@ public class Pit {
         }
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
