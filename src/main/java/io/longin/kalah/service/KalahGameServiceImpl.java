@@ -81,15 +81,7 @@ public class KalahGameServiceImpl implements KalahGameService{
             }
         }
         checkLastPit(game, pitId);
-    }
-
-    private boolean isValidPit(final Player player, final int pitId){
-        if((player.getBasePitIndex() == PLAYER_ONE_BASE) && isBase(pitId)){
-            return false;
-        }else if((player.getBasePitIndex() == PLAYER_TWO_BASE) && isBase(pitId)){
-            return false;
-        }
-        return true;
+        setNextMove(game, pitId);
     }
 
     private void checkLastPit(final Game game, final int pitId) {
@@ -108,6 +100,39 @@ public class KalahGameServiceImpl implements KalahGameService{
             oppositePit.setStones(0);
             lastPit.setStones(0);
         }
+    }
+
+    private void setNextMove(Game game, int pitId) {
+        final Player move;
+        final Pit pit = game.getBoard().getPit(pitId);
+        if(pit.getId() == PLAYER_ONE_BASE && game.getMove().getBasePitIndex() == PLAYER_ONE_BASE){
+            move = game.getMove();
+            move.setBasePitIndex(PLAYER_ONE_BASE);
+            game.setMove(move);
+        }else if (pit.getId() == PLAYER_TWO_BASE && game.getMove().getBasePitIndex() == PLAYER_TWO_BASE){
+            move = game.getMove();
+            move.setBasePitIndex(PLAYER_TWO_BASE);
+            game.setMove(move);
+        }else{
+            if(game.getMove().getBasePitIndex() == PLAYER_TWO_BASE){
+                move = game.getMove();
+                move.setBasePitIndex(PLAYER_ONE_BASE);
+                game.setMove(move);
+            }else{
+                move = game.getMove();
+                move.setBasePitIndex(PLAYER_TWO_BASE);
+                game.setMove(move);
+            }
+        }
+    }
+
+    private boolean isValidPit(final Player player, final int pitId){
+        if((player.getBasePitIndex() == PLAYER_ONE_BASE) && pitId == PLAYER_TWO_BASE){
+            return false;
+        }else if((player.getBasePitIndex() == PLAYER_TWO_BASE) && pitId == PLAYER_ONE_BASE){
+            return false;
+        }
+        return true;
     }
 
     private boolean isBase(final int pitId){

@@ -94,7 +94,7 @@ class KalahGameServiceImplTest {
         int startingPit = 4;
         int expectedStones = 7;
         int expectedBaseStones = 1;
-        kalahGameService.playGame(game.getId(), 4);
+        kalahGameService.playGame(game.getId(), startingPit);
 
         assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
         assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(expectedBaseStones);
@@ -108,11 +108,74 @@ class KalahGameServiceImplTest {
         int startingPit = 10;
         int expectedStones = 7;
         int expectedBaseStones = 1;
-        kalahGameService.playGame(game.getId(), 10);
+        kalahGameService.playGame(game.getId(), startingPit);
 
         assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
         assertThat(game.getBoard().getPit(PLAYER_TWO_BASE).getStones()).isEqualTo(expectedBaseStones);
         assertThat(game.getBoard().getPit(startingPit + 6).getStones()).isEqualTo(expectedStones);
+    }
+
+    @Test
+    public void shouldChangePlayerTurnFromPlayerOneToPlayerTwo() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_TWO_BASE));
+        int startingPit = 10;
+        int expectedStones = 7;
+        int expectedBaseStones = 1;
+        kalahGameService.playGame(game.getId(), startingPit);
+
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getBoard().getPit(PLAYER_TWO_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(startingPit + 6).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getMove().getBasePitIndex()).isEqualTo(PLAYER_ONE_BASE);
+    }
+
+    @Test
+    public void shouldChangePlayerTurnFromPlayerTwoToPlayerOne() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_ONE_BASE));
+        int startingPit = 2;
+        int expectedStones = 7;
+        int expectedBaseStones = 1;
+        kalahGameService.playGame(game.getId(), startingPit);
+
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(startingPit + 4).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getMove().getBasePitIndex()).isEqualTo(PLAYER_TWO_BASE);
+    }
+
+    @Test
+    public void shouldRepeatSamePlayerTurnForPlayerOne() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_ONE_BASE));
+        game.getBoard().getPit(5).setStones(2);
+        int startingPit = 5;
+        int expectedStones = 7;
+        int expectedBaseStones = 1;
+        kalahGameService.playGame(game.getId(), startingPit);
+
+        assertThat(game.getBoard().getPit(startingPit).getStones()).isEqualTo(ZERO);
+        assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getMove().getBasePitIndex()).isEqualTo(PLAYER_ONE_BASE);
+    }
+
+    @Test
+    public void shouldRepeatSamePlayerTurnWithManyStonesForPlayerTwo() {
+        Game game = kalahGameService.createGame();
+        game.setMove(new Player(PLAYER_TWO_BASE));
+        game.getBoard().getPit(10).setStones(17);
+        int startingPit = 10;
+        int expectedStones = 8;
+        int expectedBaseStones = 2;
+        kalahGameService.playGame(game.getId(), startingPit);
+        assertThat(game.getBoard().getPit(startingPit + 1).getStones()).isEqualTo(expectedStones);
+        assertThat(game.getBoard().getPit(PLAYER_TWO_BASE).getStones()).isEqualTo(expectedBaseStones);
+        assertThat(game.getBoard().getPit(PLAYER_ONE_BASE).getStones()).isEqualTo(ZERO);
+        assertThat(game.getBoard().getPit(PLAYER_TWO_BASE + 1).getStones()).isEqualTo(7);
+        assertThat(game.getBoard().getPit(startingPit + 6).getStones()).isEqualTo(7);
+        assertThat(game.getMove().getBasePitIndex()).isEqualTo(PLAYER_TWO_BASE);
     }
 
 
