@@ -42,7 +42,7 @@ public class KalahGameWebService {
     }
 
     private String buildUrl(final String gameId) {
-        final String port = environment.getProperty("server.port");
+        final String port = environment.getProperty("server.port", "8080");
         final String host = InetAddress.getLoopbackAddress().getHostName();
         return String.format("http://%s:%s/games/%s", host, port, gameId);
     }
